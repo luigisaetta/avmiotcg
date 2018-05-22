@@ -40,6 +40,29 @@
 			<version>4.9</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Oracle IoT -->
+		<dependency>
+			<groupId>oracle.iot</groupId>
+			<artifactId>device-library</artifactId>
+			<version>18.1.5</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/device-library.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>oracle.iot</groupId>
+			<artifactId>enterprise-library</artifactId>
+			<version>18.1.5</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/enterprise-library.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>oracle.iot</groupId>
+			<artifactId>json-library</artifactId>
+			<version>18.1.5</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/json-20160212.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -92,6 +115,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 	</build>
 
