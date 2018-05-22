@@ -47,6 +47,14 @@ public class MyResource
     	
     	if (s != null && s.length() >= MIN_LENGTH)
     	{    		
+    		ParsingDati pdd = new ParsingDati();
+    		
+    		pdd.parse(s);
+    		
+    		// for debugging purposes
+    		printData(pdd);
+    		
+    		// send to IoT
     		gClient.send();
     		
     		return "OK";
@@ -59,4 +67,13 @@ public class MyResource
     	}
     	
     }
+
+	private void printData(ParsingDati pdd)
+	{
+		System.out.println("Id: " + pdd.getidChiamante());
+		System.out.println("Lat: " + pdd.getLatitudine());
+		System.out.println("Lon: " + pdd.getLongitudine());
+		System.out.println("Speed: " + pdd.getVelocita());
+		System.out.println("Km: " + pdd.getChilometraggio());
+	}
 }
