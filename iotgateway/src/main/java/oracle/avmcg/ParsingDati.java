@@ -13,7 +13,7 @@ public class ParsingDati
 		idChiamante = stk.nextToken();
 		val = stk.nextToken();
 		// check with F.M.: I receive ' ' and not '+' Don't know why
-		stk = new StringTokenizer(val, " ");
+		stk = new StringTokenizer(val, "+");
 		val = stk.nextToken();
 		data = val.substring(0, 6);
 		ora = val.substring(6, 12);
@@ -86,14 +86,14 @@ public class ParsingDati
 		return dir;
 	}
 
-	public String getVelocita()
+	public int getVelocita()
 	{
-		return vel;
+		return Integer.parseInt(vel);
 	}
 
-	public String getChilometraggio()
+	public long getChilometraggio()
 	{
-		return km;
+		return Long.parseLong(km);
 	}
 
 	public String getSequenzaInformazione()
