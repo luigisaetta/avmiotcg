@@ -13,6 +13,11 @@ import javax.ws.rs.core.MediaType;
 @Path("r")
 public class MyResource
 {
+	//
+	// assuming POSITION ONLY msg
+	//
+	private static final int MIN_LENGTH = 76;
+	
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to the
 	 * client as "text/plain" media type.
@@ -25,12 +30,23 @@ public class MyResource
 	{
 		return "Got it!";
 	}
+	
 	@POST
     @Produces(MediaType.TEXT_PLAIN)
     public String doPost(@QueryParam("s") String s)
     {
-    	System.out.println("Param: " + s);
+    	System.out.println("POST input request s: " + s);
     	
-    	return "POST OK!";
+    	if (s != null && s.length() >= MIN_LENGTH)
+    	{
+    		return "OK";
+    	}
+    	else
+    	{
+    		// malformed input msg
+    		System.out.println("Malformed request...");
+    		return "KO";
+    	}
+    	
     }
 }
