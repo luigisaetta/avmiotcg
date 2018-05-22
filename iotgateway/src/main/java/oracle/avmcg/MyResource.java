@@ -18,6 +18,8 @@ public class MyResource
 	//
 	private static final int MIN_LENGTH = 76;
 	
+	IoTGatewayClient gClient = new IoTGatewayClient();
+	
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to the
 	 * client as "text/plain" media type.
@@ -31,6 +33,12 @@ public class MyResource
 		return "Got it!";
 	}
 	
+	/**
+	 * Method handling HTTP POST requests. The returned object will be sent to the
+	 * client as "text/plain" media type.
+	 *
+	 * @return String that will be returned as a text/plain response.
+	 */
 	@POST
     @Produces(MediaType.TEXT_PLAIN)
     public String doPost(@QueryParam("s") String s)
@@ -38,7 +46,9 @@ public class MyResource
     	System.out.println("POST input request s: " + s);
     	
     	if (s != null && s.length() >= MIN_LENGTH)
-    	{
+    	{    		
+    		gClient.send();
+    		
     		return "OK";
     	}
     	else
