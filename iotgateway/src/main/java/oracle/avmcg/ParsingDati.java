@@ -12,7 +12,7 @@ public class ParsingDati
 		StringTokenizer stk = new StringTokenizer(val, "^");
 		idChiamante = stk.nextToken();
 		val = stk.nextToken();
-		// check with F.M.: I receive ' ' and not '+' Don't know why
+		
 		stk = new StringTokenizer(val, "+");
 		val = stk.nextToken();
 		data = val.substring(0, 6);

@@ -15,16 +15,17 @@ import javax.ws.rs.core.MediaType;
 @Path("r")
 public class MyResource
 {
-	private static final String SEC_PWD = "Amsterdam1";
-
-	private static final String SEC_FILE = "/Users/lsaetta/Progetti/avmiotcg/iotgateway/target/car2";
+	// le due variabili conviene impostarle come variabili di ambiente
+	// nella shell di lancio
+	private static final String SEC_PWD = System.getenv("SEC_PWD");
+	private static final String SEC_FILE = System.getenv("SEC_FILE");
 
 	//
-	// assuming POSITION ONLY msg
+	// assuming POSITION ONLY AVM msg
 	//
 	private static final int MIN_LENGTH = 76;
 
-	private static IoTGatewayClient gClient = new IoTGatewayClient(SEC_FILE, SEC_PWD);
+	private static IoTGatewayClient gwClient = new IoTGatewayClient(SEC_FILE, SEC_PWD);
 
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to the
@@ -54,7 +55,8 @@ public class MyResource
 		{
 			// to solve the problem with + in string
 			s2 = new String(s.getBytes("UTF-8"));
-
+			
+			System.out.println("..........");
 			System.out.println("POST input request s: " + s2);
 
 			if (s2 != null && s2.length() >= MIN_LENGTH)
@@ -65,7 +67,7 @@ public class MyResource
 				pdd.parse(s2);
 
 				// send to Oracle IoT CS the msg
-				gClient.send(pdd);
+				gwClient.send(pdd);
 
 				return "OK";
 			} else
@@ -80,6 +82,5 @@ public class MyResource
 			
 			return "KO";
 		}
-
 	}
 }
