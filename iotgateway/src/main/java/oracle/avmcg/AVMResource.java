@@ -13,7 +13,7 @@ import javax.ws.rs.core.MediaType;
  * Root resource (exposed at "r" path)
  */
 @Path("r")
-public class MyResource
+public class AVMResource
 {
 	// le due variabili conviene impostarle come variabili di ambiente
 	// nella shell di lancio
