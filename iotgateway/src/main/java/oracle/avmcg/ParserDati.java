@@ -2,12 +2,12 @@ package oracle.avmcg;
 
 import java.util.StringTokenizer;
 
-public class ParsingDati
+public class ParserDati
 {
 
 	String idChiamante, lat, lng, data, ora, tipoMsg, prot, vett, dataGps, oraGps, dir, vel, km, seqInfo;
 
-	public void parse(String val)
+	public void parseAVM(String val)
 	{
 		StringTokenizer stk = new StringTokenizer(val, "^");
 		idChiamante = stk.nextToken();
@@ -103,8 +103,8 @@ public class ParsingDati
 
 	public static void main(String args[])
 	{
-		ParsingDati pd = new ParsingDati();
-		pd.parse("RM_001_AB^051102121212THG051102120000+123.456789+012.3456780129991234560001~@");
+		ParserDati pd = new ParserDati();
+		pd.parseAVM("RM_001_AB^051102121212THG051102120000+123.456789+012.3456780129991234560001~@");
 
 		System.out.println(pd.getidChiamante());
 		System.out.println(pd.getLatitudine());

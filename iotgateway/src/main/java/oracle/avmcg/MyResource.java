@@ -37,7 +37,7 @@ public class MyResource
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getIt()
 	{
-		return "Got it!";
+		return "OK";
 	}
 
 	/**
@@ -61,10 +61,10 @@ public class MyResource
 
 			if (s2 != null && s2.length() >= MIN_LENGTH)
 			{
-				ParsingDati pdd = new ParsingDati();
+				ParserDati pdd = new ParserDati();
 
 				// encapsulate data in pdd
-				pdd.parse(s2);
+				pdd.parseAVM(s2);
 
 				// send to Oracle IoT CS the msg
 				gwClient.send(pdd);

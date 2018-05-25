@@ -48,6 +48,6 @@ public class MyResourceTest
 	public void testGetIt()
 	{
 		String responseMsg = target.path("r").request().get(String.class);
-		assertEquals("Got it!", responseMsg);
+		assertEquals("OK", responseMsg);
 	}
 }

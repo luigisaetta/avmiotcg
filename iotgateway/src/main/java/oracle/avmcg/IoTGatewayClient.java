@@ -53,13 +53,11 @@ public class IoTGatewayClient
 	 * 
 	 * send the message to IoT using Oracle SDK
 	 */
-	public void send(ParsingDati msg)
+	public void send(ParserDati msg)
 	{
 		String deviceId = null;
 		VirtualDevice virtualDevice = null;
 		
-		System.out.println("Msg sent to Iot...");
-
 		printData(msg);
 		
 		// Lazy Registration of Device
@@ -103,6 +101,8 @@ public class IoTGatewayClient
 					.set("ora_altitude", 0).set("ora_obd2_vehicle_speed", msg.getVelocita())
 					.set("ora_obd2_engine_rpm", 0).set("ora_obd2_engine_coolant_temperature", 50)
 					.set("ora_obd2_number_of_dtcs", 0).finish();
+			
+			System.out.println("Msg sent to Iot...");
 		} catch (Exception e)
 		{
 			// continue
@@ -126,7 +126,7 @@ public class IoTGatewayClient
 		return metaData;
 	}
 
-	private void printData(ParsingDati pdd)
+	private void printData(ParserDati pdd)
 	{
 		System.out.println("PROGR: " + pdd.getSequenzaInformazione());
 		System.out.println("Id: " + pdd.getidChiamante());
