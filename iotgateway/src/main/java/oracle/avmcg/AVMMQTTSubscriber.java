@@ -2,26 +2,28 @@ package oracle.avmcg;
 
 import java.io.UnsupportedEncodingException;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
+
 
 public class AVMMQTTSubscriber implements MqttCallback
 {
+	// le due variabili conviene impostarle come variabili di ambiente
+	// nella shell di lancio
+	private static final String SEC_PWD = System.getenv("SEC_PWD");
+	private static final String SEC_FILE = System.getenv("SEC_FILE");
+
+	private static IoTGatewayClient gwClient = new IoTGatewayClient(SEC_FILE, SEC_PWD);
+	
 	private MqttClient client = null;
 
 	private static final int MYQOS = 1;
-	private static final int SLEEP_TIME = 10000;
 	private static final String clientId = "javagw1";
 
 	// le due successive forse vale la pena spostarle in un file di properties
 	private static final String broker = "tcp://localhost:1883";
 	// using wildcard here
-	private static final String IN_TOPIC = "devices/+/msg";
+	private static final String IN_TOPIC = "devices/avm/msg";
 
 	private static MemoryPersistence persistence = new MemoryPersistence();
 	private static MqttConnectOptions connOpts = new MqttConnectOptions();
@@ -73,6 +75,7 @@ public class AVMMQTTSubscriber implements MqttCallback
 	{
 		String sMessage = new String(message.getPayload());
 
+		System.out.println("..........");
 		System.out.println("Received a msg on topic: " + topic);
 		System.out.println("Message: " + sMessage);
 
@@ -82,15 +85,19 @@ public class AVMMQTTSubscriber implements MqttCallback
 			// to solve the problem with + in string
 			s = new String(sMessage.getBytes("UTF-8"));
 
-			System.out.println("..........");
-			System.out.println("input request s: " + s);
-
 			if (isPayloadOK(s))
 			{
 				ParserDati pdd = new ParserDati();
 
 				// encapsulate data in pdd
 				pdd.parseAVM(s);
+
+				// add send to Oracle IoT
+				// send to Oracle IoT CS the msg
+				gwClient.send(pdd);
+				
+				// send to Traccar
+				TraccarClient.sendToVServer(pdd);
 
 			} else
 			{
