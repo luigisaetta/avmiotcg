@@ -9,8 +9,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.google.gson.Gson;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+
 /**
  * Root resource (exposed at "r" path)
+ * 
+ * this class provide methods to handle HTTP requests compliant to Cotral AVM
+ * protocol
  */
 @Path("r")
 public class AVMResource
@@ -55,11 +66,11 @@ public class AVMResource
 		{
 			// to solve the problem with + in string
 			s2 = new String(s.getBytes("UTF-8"));
-			
+
 			System.out.println("..........");
 			System.out.println("POST input request s: " + s2);
 
-			if (s2 != null && s2.length() >= MIN_LENGTH)
+			if (isPayloadOK(s2))
 			{
 				ParserDati pdd = new ParserDati();
 
@@ -68,6 +79,10 @@ public class AVMResource
 
 				// send to Oracle IoT CS the msg
 				gwClient.send(pdd);
+
+				// send to Visualization Server
+				// now Traccar
+				sendToVServer(pdd);
 
 				return "OK";
 			} else
@@ -79,8 +94,54 @@ public class AVMResource
 		} catch (UnsupportedEncodingException e)
 		{
 			e.printStackTrace();
-			
+
 			return "KO";
+		}
+	}
+	
+	private boolean isPayloadOK(String s)
+	{
+		if (s != null && s.length() >= MIN_LENGTH)
+			return true;
+		else
+			return false;
+	}
+	
+	/*
+	 * 
+	 * Using Apache HTTP client and Google JSON
+	 * 
+	 */
+	private void sendToVServer(ParserDati msg)
+	{
+		// make a POST request using TRACCAR owntracks protocol
+        String tracUrl = "http://localhost:5144";
+        
+		// build JSON request object
+		// this is an example of the payload
+		// {"lon":2.29513,"lat":48.85833,"vel": 61,"_type":"location","tst":1497476456,
+		// "tid":"JJ"}
+		Gson gson = new Gson();
+
+		long tst = System.currentTimeMillis()/1000;
+
+		TracMessage trcMess = new TracMessage(msg.getLongitudine(), msg.getLatitudine(), msg.getVelocita(), tst, "R9",
+				"location");
+
+		try
+		{
+			HttpClient httpClient = HttpClientBuilder.create().build();
+			
+			HttpPost     post          = new HttpPost(tracUrl);
+			StringEntity postingString = new StringEntity(gson.toJson(trcMess));
+			
+			post.setEntity(postingString);
+			post.setHeader("Content-type", "application/json");
+			
+			HttpResponse  response = httpClient.execute(post);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 }

@@ -21,7 +21,7 @@ public class AVMResourceTest
 	public void setUp() throws Exception
 	{
 		// start the server
-		server = Main.startServer();
+		server = Main.startHTTPServer();
 		// create the client
 		Client c = ClientBuilder.newClient();
 
