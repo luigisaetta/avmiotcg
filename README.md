@@ -3,8 +3,16 @@
 ## Author: L. Saetta
 
 ### Starting Date:   22/05/2018
-### Last update:     22/05/2018
+### Last update:     27/05/2018
 ###                  luigi.saetta@gmail.com
 
-This repository contains most of the work I have done to develop a working prototype for AVM
+This repository contains most of the work I have done to develop a working prototype for a
+Cloud Gateway for an Automatic Vehichle Monitoring System (AVM)
+based on Oracle IoT Cloud Service
+
+The Gateway now support two incoming protocol:
+* HTTP
+* MQTT
+a custom input msg format is embedded in the code, but it can easily be changed
+
 
