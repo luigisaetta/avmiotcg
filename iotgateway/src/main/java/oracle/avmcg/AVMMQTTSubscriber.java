@@ -1,5 +1,7 @@
 package oracle.avmcg;
 
+import java.io.UnsupportedEncodingException;
+
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -8,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-public class MyMQTTSubscriber implements MqttCallback
+public class AVMMQTTSubscriber implements MqttCallback
 {
 	private MqttClient client = null;
 
@@ -24,7 +26,9 @@ public class MyMQTTSubscriber implements MqttCallback
 	private static MemoryPersistence persistence = new MemoryPersistence();
 	private static MqttConnectOptions connOpts = new MqttConnectOptions();
 
-	public MyMQTTSubscriber()
+	private static final int MIN_LENGTH = 76;
+
+	public AVMMQTTSubscriber()
 	{
 		try
 		{
@@ -72,14 +76,28 @@ public class MyMQTTSubscriber implements MqttCallback
 		System.out.println("Received a msg on topic: " + topic);
 		System.out.println("Message: " + sMessage);
 
-		/**
-		 * unmarshal JSON
-		 */
+		String s = null;
 		try
 		{
-			// TODO aggiungere if qui...
+			// to solve the problem with + in string
+			s = new String(sMessage.getBytes("UTF-8"));
 
-		} catch (Exception e)
+			System.out.println("..........");
+			System.out.println("input request s: " + s);
+
+			if (isPayloadOK(s))
+			{
+				ParserDati pdd = new ParserDati();
+
+				// encapsulate data in pdd
+				pdd.parseAVM(s);
+
+			} else
+			{
+				// malformed input msg
+				System.out.println("Malformed request...");
+			}
+		} catch (UnsupportedEncodingException e)
 		{
 			e.printStackTrace();
 		}
@@ -89,5 +107,13 @@ public class MyMQTTSubscriber implements MqttCallback
 	public void deliveryComplete(IMqttDeliveryToken token)
 	{
 
+	}
+
+	private boolean isPayloadOK(String s)
+	{
+		if (s != null && s.length() >= MIN_LENGTH)
+			return true;
+		else
+			return false;
 	}
 }

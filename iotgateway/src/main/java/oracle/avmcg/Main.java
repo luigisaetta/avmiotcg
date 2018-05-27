@@ -16,7 +16,7 @@ public class Main
 	// Base URI the Grizzly HTTP server will listen on
 	public static final String BASE_URI = "http://localhost:8080/avm/";
 
-	private static MyMQTTSubscriber sub = null;
+	private static AVMMQTTSubscriber sub = null;
 
 	/**
 	 * Starts Grizzly HTTP server exposing JAX-RS resources defined in this
@@ -40,9 +40,9 @@ public class Main
 	 * extension added to support incoming MQTT messages
 	 * 
 	 */
-	public static MyMQTTSubscriber startMQTTSuscriber()
+	public static AVMMQTTSubscriber startMQTTSuscriber()
 	{
-		MyMQTTSubscriber theSub = new MyMQTTSubscriber();
+		AVMMQTTSubscriber theSub = new AVMMQTTSubscriber();
 		
 		return theSub;
 	}
