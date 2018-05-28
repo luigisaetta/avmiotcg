@@ -23,11 +23,6 @@ public class AVMResource
 	private static final String SEC_PWD = System.getenv("SEC_PWD");
 	private static final String SEC_FILE = System.getenv("SEC_FILE");
 
-	//
-	// assuming POSITION ONLY AVM msg
-	//
-	private static final int MIN_LENGTH = 76;
-
 	private static IoTGatewayClient gwClient = new IoTGatewayClient(SEC_FILE, SEC_PWD);
 
 	/**
@@ -90,6 +85,11 @@ public class AVMResource
 			return "KO";
 		}
 	}
+	
+	//
+	// assuming POSITION ONLY AVM msg
+	//
+	private static final int MIN_LENGTH = 76;
 	
 	private boolean isPayloadOK(String s)
 	{

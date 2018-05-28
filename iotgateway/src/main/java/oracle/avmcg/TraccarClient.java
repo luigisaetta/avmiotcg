@@ -14,7 +14,7 @@ public class TraccarClient
 	 * Using Apache HTTP client and Google JSON
 	 * 
 	 */
-	private static final String tracUrl = "http://localhost:5144";
+	private static final String tracUrl = "http://visual-server:5144";
 	
 	public static void sendToVServer(ParserDati msg)
 	{
@@ -28,8 +28,8 @@ public class TraccarClient
 
 		long tst = System.currentTimeMillis() / 1000;
 
-		TracMessage trcMess = new TracMessage(msg.getLongitudine(), msg.getLatitudine(), msg.getVelocita(), tst, "R9",
-				"location");
+		TraccarMessage trcMess = new TraccarMessage(msg.getLongitudine(), msg.getLatitudine(), msg.getVelocita(), tst, 
+				msg.getidChiamante(), "R09", "location");
 
 		try
 		{

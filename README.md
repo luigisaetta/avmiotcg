@@ -13,6 +13,7 @@ based on Oracle IoT Cloud Service
 The Gateway now support two protocols for incoming messages:
 * HTTP
 * MQTT
+
 a custom input msg format is embedded in the code, but it can easily be changed
 
 

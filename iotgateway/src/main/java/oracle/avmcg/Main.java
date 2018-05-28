@@ -14,8 +14,9 @@ import java.net.URI;
 public class Main
 {
 	// Base URI the Grizzly HTTP server will listen on
-	public static final String BASE_URI = "http://localhost:8080/avm/";
-
+	public static final String BASE_URI = "http://avmserver:8080/avm/";
+	private static final String broker = "tcp://mqtt-broker:1883";
+	
 	private static AVMMQTTSubscriber sub = null;
 
 	/**
@@ -63,7 +64,7 @@ public class Main
 
 		sub = startMQTTSuscriber();
 		
-		System.out.println("AVM MQTT Gateway started...");
+		System.out.println("AVM MQTT Gateway started, connected with: " + broker);
 		
 		System.in.read();
 

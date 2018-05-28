@@ -20,8 +20,8 @@ public class AVMMQTTSubscriber implements MqttCallback
 	private static final int MYQOS = 1;
 	private static final String clientId = "javagw1";
 
-	// le due successive forse vale la pena spostarle in un file di properties
-	private static final String broker = "tcp://localhost:1883";
+	// maybe should be moved in a properties file
+	private static final String broker = "tcp://mqtt-broker:1883";
 	// using wildcard here
 	private static final String IN_TOPIC = "devices/avm/msg";
 
@@ -69,7 +69,12 @@ public class AVMMQTTSubscriber implements MqttCallback
 	{ // Called when the client lost the connection to the broker
 		System.out.println("Lost connection to broker...");
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * The msg is processed in this function
+	 * @see org.eclipse.paho.client.mqttv3.MqttCallback#messageArrived(java.lang.String, org.eclipse.paho.client.mqttv3.MqttMessage)
+	 */
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception
 	{

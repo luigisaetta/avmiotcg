@@ -5,7 +5,7 @@ package oracle.avmcg;
  * POJO class for msg to Traccar
  * 
  */
-public class TracMessage
+public class TraccarMessage
 {
 	private double lon;
 	private double lat;
@@ -13,13 +13,25 @@ public class TracMessage
 	private long tst;
 	private String _type;
 	private String tid;
+	private String topic;
 	
-	public TracMessage(double lon, double lat, int vel, long tst, String tid, String type)
+	public String getTopic()
+	{
+		return topic;
+	}
+
+	public void setTopic(String topic)
+	{
+		this.topic = topic;
+	}
+
+	public TraccarMessage(double lon, double lat, int vel, long tst, String topic, String tid, String type)
 	{
 		this.lon = lon;
 		this.lat = lat;
 		this.vel = vel;
 		this.tst = tst;
+		this.topic = topic;
 		this.tid = tid;
 		this._type = type;
 	}
