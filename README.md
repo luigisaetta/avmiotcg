@@ -16,5 +16,5 @@ The Gateway now support two protocols for incoming messages:
 
 a custom input msg format is embedded in the code, but it can easily be changed
 
-29/95: added support for Docker
+29/05: added support for Docker
 
