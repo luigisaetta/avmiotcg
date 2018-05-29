@@ -3,7 +3,7 @@
 ## Author: L. Saetta
 
 ### Starting Date:   22/05/2018
-### Last update:     27/05/2018
+### Last update:     29/05/2018
 ###                  luigi.saetta@gmail.com
 
 This repository contains most of the work I have done to develop a working prototype for a
@@ -16,4 +16,5 @@ The Gateway now support two protocols for incoming messages:
 
 a custom input msg format is embedded in the code, but it can easily be changed
 
+29/95: added support for Docker
 
