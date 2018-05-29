@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mq:
+    image: "redis"
+    restart: always
+    ports:
+      - "6379:6379"
+  mqtt-broker:
+    hostname: mqtt-broker
+    container_name: mqtt-broker
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+  traccar:
+    hostname: visual-server
+    container_name: visual-server
+    image: traccar/traccar
+    ports:
+      - "5144:5144"
+      - "8082:8082"
+  avmserver:
+    hostname: avmserver
+    container_name: avmserver
+    depends_on:
+      - mqtt-broker
+      - traccar
+    build: .
+    ports:
+      - "8080:8080"

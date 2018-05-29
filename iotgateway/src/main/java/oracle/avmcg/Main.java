@@ -14,7 +14,8 @@ import java.net.URI;
 public class Main
 {
 	// Base URI the Grizzly HTTP server will listen on
-	public static final String BASE_URI = "http://avmserver:8080/avm/";
+	// changed to 0.0.0.0 in order to make it OK for Docker
+	public static final String BASE_URI = "http://0.0.0.0:8080/avm/";
 	private static final String broker = "tcp://mqtt-broker:1883";
 	
 	private static AVMMQTTSubscriber sub = null;
@@ -59,15 +60,25 @@ public class Main
 		final HttpServer server = startHTTPServer();
 
 		System.out.println(String.format(
-				"AVM IoT Gateway started with WADL available at " + "%sapplication.wadl\nHit enter to stop it...",
+				"AVM IoT Gateway started with WADL available at " + "%sapplication.wadl\nHit CTRL-C to stop it...",
 				BASE_URI));
 
 		sub = startMQTTSuscriber();
 		
 		System.out.println("AVM MQTT Gateway started, connected with: " + broker);
 		
-		System.in.read();
-
-		server.shutdown();
+		// loop to keep the server running...
+		while(true)
+		{
+			try
+			{
+				Thread.sleep(60000);
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+				
+				server.shutdown();
+			}
+		}
 	}
 }
