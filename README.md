@@ -1,6 +1,7 @@
 # AVMIOTCG
 #
 ## Author: L. Saetta
+## Contrib:F. Marini
 
 ### Starting Date:   22/05/2018
 ### Last update:     29/05/2018

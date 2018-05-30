@@ -13,6 +13,7 @@ import java.net.URI;
  */
 public class Main
 {
+	private static final int SLEEP_TIME = 60000;
 	// Base URI the Grizzly HTTP server will listen on
 	// changed to 0.0.0.0 in order to make it OK for Docker
 	public static final String BASE_URI = "http://0.0.0.0:8080/avm/";
@@ -72,7 +73,7 @@ public class Main
 		{
 			try
 			{
-				Thread.sleep(60000);
+				Thread.sleep(SLEEP_TIME);
 			} catch (InterruptedException e)
 			{
 				e.printStackTrace();
