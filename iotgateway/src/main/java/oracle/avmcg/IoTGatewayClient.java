@@ -53,7 +53,7 @@ public class IoTGatewayClient
 	 * 
 	 * send the message to IoT using Oracle SDK
 	 */
-	public void send(ParserDati msg)
+	public void send(OBD2Message msg)
 	{
 		String deviceId = null;
 		VirtualDevice virtualDevice = null;
@@ -61,24 +61,24 @@ public class IoTGatewayClient
 		printData(msg);
 		
 		// Lazy Registration of Device
-		if (hDevices.get(msg.getidChiamante()) == null)
+		if (hDevices.get(msg.getIdChiamante()) == null)
 		{
 			// NOT FOUND in Hastable, register it
 
 			// add any vendor-specific meta-data to the metaData Map
-			Map<String, String> metaData = initMetadataMap(msg.getidChiamante());
+			Map<String, String> metaData = initMetadataMap(msg.getIdChiamante());
 
 			try
 			{
 				// getIdChiamante() as DEVICE_ACTIVATION_ID
-				deviceId = gw.registerDevice(msg.getidChiamante(), metaData, OBD2_URN_MSG);
+				deviceId = gw.registerDevice(msg.getIdChiamante(), metaData, OBD2_URN_MSG);
 				
 				System.out.println("OK after device registration: " + deviceId);
 
 				virtualDevice = gw.createVirtualDevice(deviceId, deviceModel);
 				
 				// save in Hashtable
-				hDevices.put(msg.getidChiamante(), virtualDevice);
+				hDevices.put(msg.getIdChiamante(), virtualDevice);
 			} catch (IOException e)
 			{
 				e.printStackTrace();
@@ -95,10 +95,10 @@ public class IoTGatewayClient
 			//
 			
 			// now virtualDevice should be in hashtable
-			virtualDevice = hDevices.get(msg.getidChiamante());
+			virtualDevice = hDevices.get(msg.getIdChiamante());
 			
-			virtualDevice.update().set("ora_latitude", msg.getLatitudine()).set("ora_longitude", msg.getLongitudine())
-					.set("ora_altitude", 0).set("ora_obd2_vehicle_speed", msg.getVelocita())
+			virtualDevice.update().set("ora_latitude", msg.getLat()).set("ora_longitude", msg.getLng())
+					.set("ora_altitude", 0).set("ora_obd2_vehicle_speed", msg.getVel())
 					.set("ora_obd2_engine_rpm", 0).set("ora_obd2_engine_coolant_temperature", 50)
 					.set("ora_obd2_number_of_dtcs", 0).finish();
 			
@@ -126,13 +126,13 @@ public class IoTGatewayClient
 		return metaData;
 	}
 
-	private void printData(ParserDati pdd)
+	private void printData(OBD2Message msg)
 	{
-		System.out.println("PROGR: " + pdd.getSequenzaInformazione());
-		System.out.println("Id: " + pdd.getidChiamante());
-		System.out.println("Lat: " + pdd.getLatitudine());
-		System.out.println("Lon: " + pdd.getLongitudine());
-		System.out.println("Speed: " + pdd.getVelocita());
-		System.out.println("Km: " + pdd.getChilometraggio());
+		System.out.println("PROGR: " + msg.getSeqInfo());
+		System.out.println("Id: " + msg.getIdChiamante());
+		System.out.println("Lat: " + msg.getLat());
+		System.out.println("Lon: " + msg.getLng());
+		System.out.println("Speed: " + msg.getVel());
+		System.out.println("Km: " + msg.getKm());
 	}
 }

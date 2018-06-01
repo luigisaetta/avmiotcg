@@ -26,6 +26,7 @@ public class MyConfig
 	private int mqttBrokerPort = 1883;
 	private String inputTopic = "devices/avm/msg";
 	
+	private String msgType = "STRING";
 	private int msgMinLength = 76;
 	
 
@@ -81,6 +82,8 @@ public class MyConfig
 				mqttBrokerPort = Integer.parseInt(get("mqtt.broker.port"));
 			if (get("mqtt.in.topic") != null)
 				inputTopic = get("mqtt.in.topic");
+			if(get("message.type") != null)
+				msgType = get("message.type");
 			if (get("message.minlength") != null)
 				msgMinLength = Integer.parseInt(get("message.minlength"));
 		} catch (Exception ex)
@@ -101,6 +104,11 @@ public class MyConfig
 				}
 			}
 		}
+	}
+
+	public String getMsgType()
+	{
+		return msgType;
 	}
 
 	public String getBaseUri()
@@ -156,6 +164,7 @@ public class MyConfig
 		System.out.println("mqtt.broker.port = " + this.getMqttBrokerPort());
 		System.out.println("mqtt.in.topic = " + this.getInputTopic());
 		
+		System.out.println("message.type = " + this.getMsgType());
 		System.out.println("message.minlength = " + this.getMsgMinLength());
 		System.out.println("...");
 		System.out.println("...");

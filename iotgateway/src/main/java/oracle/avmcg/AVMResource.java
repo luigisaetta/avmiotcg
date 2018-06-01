@@ -28,6 +28,8 @@ public class AVMResource
 	// Access config
 	private static MyConfig config = MyConfig.getInstance();
 
+	MessageParser processor = MessageParserFactory.createProcessor(config.getMsgType());
+	
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to the
 	 * client as "text/plain" media type.
@@ -59,18 +61,15 @@ public class AVMResource
 
 		if ((sOut != null) && (isPayloadOK(sOut)))
 		{
-			ParserDati pdd = new ParserDati();
-
-			// encapsulate data in pdd
-			pdd.parseAVM(sOut);
+			OBD2Message msg = processor.process(sOut);
 
 			// send to Oracle IoT CS the msg
-			gwClient.send(pdd);
+			gwClient.send(msg);
 
 			// send to Visualization Server
 			// now Traccar
 			if (config.isTraccarEnabled())
-				TraccarClient.sendToVServer(pdd);
+				TraccarClient.sendToVServer(msg);
 
 			return "OK";
 		} else

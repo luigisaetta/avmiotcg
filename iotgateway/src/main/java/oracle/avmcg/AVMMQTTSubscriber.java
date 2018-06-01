@@ -90,21 +90,20 @@ public class AVMMQTTSubscriber implements MqttCallback
 
 		// to solve the problem with + in string
 		String sOut = encodeUTF8(sMessage);
-
+		
 		if ((sOut != null) && (isPayloadOK(sOut)))
 		{
-			ParserDati pdd = new ParserDati();
-
-			// encapsulate data in pdd
-			pdd.parseAVM(sOut);
+			MessageParser processor = MessageParserFactory.createProcessor(config.getMsgType());
+			
+			OBD2Message msg = processor.process(sOut);
 
 			// add send to Oracle IoT
 			// send to Oracle IoT CS the msg
-			gwClient.send(pdd);
+			gwClient.send(msg);
 
 			// send to Traccar
 			if (config.isTraccarEnabled())
-				TraccarClient.sendToVServer(pdd);
+				TraccarClient.sendToVServer(msg);
 
 		} else
 		{

@@ -62,6 +62,7 @@ public class Main
 	public static void main(String[] args) throws IOException
 	{
 		printHeader();
+		config.printConfig();
 		
 		final HttpServer server = startHTTPServer(config.getBaseUri());
 

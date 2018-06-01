@@ -16,7 +16,7 @@ public class TraccarClient
 	 */
 	private static MyConfig config = MyConfig.getInstance();
 	
-	public static void sendToVServer(ParserDati msg)
+	public static void sendToVServer(OBD2Message msg)
 	{
 		String tracUrl = config.getTraccarUrl();
 		
@@ -30,8 +30,8 @@ public class TraccarClient
 
 		long tst = System.currentTimeMillis() / 1000;
 
-		TraccarMessage trcMess = new TraccarMessage(msg.getLongitudine(), msg.getLatitudine(), msg.getVelocita(), tst, 
-				msg.getidChiamante(), "R09", "location");
+		TraccarMessage trcMess = new TraccarMessage(msg.getLng(), msg.getLat(), msg.getVel(), tst, 
+				msg.getIdChiamante(), "R09", "location");
 
 		try
 		{
