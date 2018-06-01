@@ -5,30 +5,32 @@ import java.io.UnsupportedEncodingException;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-
 public class AVMMQTTSubscriber implements MqttCallback
 {
-	// le due variabili conviene impostarle come variabili di ambiente
+	// le due variabili sono impostate come variabili di ambiente
 	// nella shell di lancio
 	private static final String SEC_PWD = System.getenv("SEC_PWD");
 	private static final String SEC_FILE = System.getenv("SEC_FILE");
 
+	// Access config
+	private static MyConfig config = MyConfig.getInstance();
+
 	private static IoTGatewayClient gwClient = new IoTGatewayClient(SEC_FILE, SEC_PWD);
-	
+
 	private MqttClient client = null;
 
 	private static final int MYQOS = 1;
 	private static final String clientId = "javagw1";
 
-	// maybe should be moved in a properties file
-	private static final String broker = "tcp://mqtt-broker:1883";
+	// MQTT broker
+	private static final String broker = "tcp://" + config.getMqttBrokerHost() + ":" + config.getMqttBrokerPort();
 	// using wildcard here
-	private static final String IN_TOPIC = "devices/avm/msg";
+	private static final String IN_TOPIC = config.getInputTopic();
 
 	private static MemoryPersistence persistence = new MemoryPersistence();
 	private static MqttConnectOptions connOpts = new MqttConnectOptions();
 
-	private static final int MIN_LENGTH = 76;
+	private static final int MIN_LENGTH = config.getMsgMinLength();
 
 	public AVMMQTTSubscriber()
 	{
@@ -69,11 +71,13 @@ public class AVMMQTTSubscriber implements MqttCallback
 	{ // Called when the client lost the connection to the broker
 		System.out.println("Lost connection to broker...");
 	}
-	
+
 	/*
-	 * (non-Javadoc)
-	 * The msg is processed in this function
-	 * @see org.eclipse.paho.client.mqttv3.MqttCallback#messageArrived(java.lang.String, org.eclipse.paho.client.mqttv3.MqttMessage)
+	 * (non-Javadoc) The msg is processed in this function
+	 * 
+	 * @see
+	 * org.eclipse.paho.client.mqttv3.MqttCallback#messageArrived(java.lang.String,
+	 * org.eclipse.paho.client.mqttv3.MqttMessage)
 	 */
 	@Override
 	public void messageArrived(String topic, MqttMessage message) throws Exception
@@ -84,41 +88,51 @@ public class AVMMQTTSubscriber implements MqttCallback
 		System.out.println("Received a msg on topic: " + topic);
 		System.out.println("Message: " + sMessage);
 
-		String s = null;
-		try
+		// to solve the problem with + in string
+		String sOut = encodeUTF8(sMessage);
+
+		if ((sOut != null) && (isPayloadOK(sOut)))
 		{
-			// to solve the problem with + in string
-			s = new String(sMessage.getBytes("UTF-8"));
+			ParserDati pdd = new ParserDati();
 
-			if (isPayloadOK(s))
-			{
-				ParserDati pdd = new ParserDati();
+			// encapsulate data in pdd
+			pdd.parseAVM(sOut);
 
-				// encapsulate data in pdd
-				pdd.parseAVM(s);
+			// add send to Oracle IoT
+			// send to Oracle IoT CS the msg
+			gwClient.send(pdd);
 
-				// add send to Oracle IoT
-				// send to Oracle IoT CS the msg
-				gwClient.send(pdd);
-				
-				// send to Traccar
+			// send to Traccar
+			if (config.isTraccarEnabled())
 				TraccarClient.sendToVServer(pdd);
 
-			} else
-			{
-				// malformed input msg
-				System.out.println("Malformed request...");
-			}
-		} catch (UnsupportedEncodingException e)
+		} else
 		{
-			e.printStackTrace();
+			// malformed input msg
+			System.out.println("Malformed request...");
 		}
+
 	}
 
 	@Override
 	public void deliveryComplete(IMqttDeliveryToken token)
 	{
 
+	}
+
+	private String encodeUTF8(String sInput)
+	{
+		String sOutput = null;
+
+		try
+		{
+			sOutput = new String(sInput.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
+
+		return sOutput;
 	}
 
 	private boolean isPayloadOK(String s)
@@ -128,4 +142,5 @@ public class AVMMQTTSubscriber implements MqttCallback
 		else
 			return false;
 	}
+
 }

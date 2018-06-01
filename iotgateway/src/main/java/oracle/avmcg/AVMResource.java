@@ -18,12 +18,15 @@ import javax.ws.rs.core.MediaType;
 @Path("r")
 public class AVMResource
 {
-	// le due variabili conviene impostarle come variabili di ambiente
+	// le due variabili sono impostate come variabili di ambiente
 	// nella shell di lancio
 	private static final String SEC_PWD = System.getenv("SEC_PWD");
 	private static final String SEC_FILE = System.getenv("SEC_FILE");
 
 	private static IoTGatewayClient gwClient = new IoTGatewayClient(SEC_FILE, SEC_PWD);
+
+	// Access config
+	private static MyConfig config = MyConfig.getInstance();
 
 	/**
 	 * Method handling HTTP GET requests. The returned object will be sent to the
@@ -48,49 +51,57 @@ public class AVMResource
 	@Produces(MediaType.TEXT_PLAIN)
 	public String doPost(@QueryParam("s") String s)
 	{
-		String s2 = null;
-		try
+		// to solve the problem with + in string
+		String sOut = encodeUTF8(s);
+		
+		System.out.println("..........");
+		System.out.println("POST input request s: " + sOut);
+
+		if ((sOut != null) && (isPayloadOK(sOut)))
 		{
-			// to solve the problem with + in string
-			s2 = new String(s.getBytes("UTF-8"));
+			ParserDati pdd = new ParserDati();
 
-			System.out.println("..........");
-			System.out.println("POST input request s: " + s2);
+			// encapsulate data in pdd
+			pdd.parseAVM(sOut);
 
-			if (isPayloadOK(s2))
-			{
-				ParserDati pdd = new ParserDati();
+			// send to Oracle IoT CS the msg
+			gwClient.send(pdd);
 
-				// encapsulate data in pdd
-				pdd.parseAVM(s2);
-
-				// send to Oracle IoT CS the msg
-				gwClient.send(pdd);
-
-				// send to Visualization Server
-				// now Traccar
+			// send to Visualization Server
+			// now Traccar
+			if (config.isTraccarEnabled())
 				TraccarClient.sendToVServer(pdd);
 
-				return "OK";
-			} else
-			{
-				// malformed input msg
-				System.out.println("Malformed request...");
-				return "KO";
-			}
-		} catch (UnsupportedEncodingException e)
+			return "OK";
+		} else
 		{
-			e.printStackTrace();
-
+			// malformed input msg
+			System.out.println("Malformed request...");
 			return "KO";
 		}
+
 	}
-	
+
 	//
 	// assuming POSITION ONLY AVM msg
 	//
-	private static final int MIN_LENGTH = 76;
-	
+	private String encodeUTF8(String sInput)
+	{
+		String sOutput = null;
+
+		try
+		{
+			sOutput = new String(sInput.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e)
+		{
+			e.printStackTrace();
+		}
+
+		return sOutput;
+	}
+
+	private static final int MIN_LENGTH = config.getMsgMinLength();
+
 	private boolean isPayloadOK(String s)
 	{
 		if (s != null && s.length() >= MIN_LENGTH)

@@ -20,8 +20,12 @@ public class AVMResourceTest
 	@Before
 	public void setUp() throws Exception
 	{
+		MyConfig config = MyConfig.getInstance();
+
+		String BASE_URI = config.getBaseUri();
+
 		// start the server
-		server = Main.startHTTPServer();
+		server = Main.startHTTPServer(BASE_URI);
 		// create the client
 		Client c = ClientBuilder.newClient();
 
@@ -31,8 +35,7 @@ public class AVMResourceTest
 		// --
 		// c.configuration().enable(new
 		// org.glassfish.jersey.media.json.JsonJaxbFeature());
-
-		target = c.target(Main.BASE_URI);
+		target = c.target(BASE_URI);
 	}
 
 	@After

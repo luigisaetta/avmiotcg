@@ -14,10 +14,12 @@ public class TraccarClient
 	 * Using Apache HTTP client and Google JSON
 	 * 
 	 */
-	private static final String tracUrl = "http://visual-server:5144";
+	private static MyConfig config = MyConfig.getInstance();
 	
 	public static void sendToVServer(ParserDati msg)
 	{
+		String tracUrl = config.getTraccarUrl();
+		
 		// make a POST request using TRACCAR owntracks protocol
 		
 		// build JSON request object

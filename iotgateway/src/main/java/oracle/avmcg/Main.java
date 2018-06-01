@@ -3,9 +3,9 @@ package oracle.avmcg;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
-
 import java.io.IOException;
 import java.net.URI;
+
 
 /**
  * Main class.
@@ -13,12 +13,14 @@ import java.net.URI;
  */
 public class Main
 {
-	private static final int SLEEP_TIME = 60000;
-	// Base URI the Grizzly HTTP server will listen on
-	// changed to 0.0.0.0 in order to make it OK for Docker
-	public static final String BASE_URI = "http://0.0.0.0:8080/avm/";
-	private static final String broker = "tcp://mqtt-broker:1883";
+	// Singleton to access configuration
+	// try to read config from config.properties
+	private static MyConfig config = MyConfig.getInstance();
 	
+	private static final int SLEEP_TIME = 60000;
+	
+	private static final String broker = "tcp://" + config.getMqttBrokerHost() + ":" + config.getMqttBrokerPort();
+
 	private static AVMMQTTSubscriber sub = null;
 
 	/**
@@ -27,7 +29,7 @@ public class Main
 	 * 
 	 * @return Grizzly HTTP server.
 	 */
-	public static HttpServer startHTTPServer()
+	public static HttpServer startHTTPServer(String BASE_URI)
 	{
 		// create a resource config that scans for JAX-RS resources and providers
 		// in oracle.avmcg package
@@ -35,6 +37,7 @@ public class Main
 
 		// create and start a new instance of grizzly http server
 		// exposing the Jersey application at BASE_URI
+		
 		return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
 	}
 
@@ -46,7 +49,7 @@ public class Main
 	public static AVMMQTTSubscriber startMQTTSuscriber()
 	{
 		AVMMQTTSubscriber theSub = new AVMMQTTSubscriber();
-		
+
 		return theSub;
 	}
 
@@ -58,18 +61,38 @@ public class Main
 	 */
 	public static void main(String[] args) throws IOException
 	{
-		final HttpServer server = startHTTPServer();
+		printHeader();
+		
+		final HttpServer server = startHTTPServer(config.getBaseUri());
 
 		System.out.println(String.format(
 				"AVM IoT Gateway started with WADL available at " + "%sapplication.wadl\nHit CTRL-C to stop it...",
-				BASE_URI));
+				config.getBaseUri()));
 
-		sub = startMQTTSuscriber();
+		if (config.isMqttBrokerEnabled())
+		{
+			sub = startMQTTSuscriber();
+			System.out.println("AVM MQTT Gateway started, connected with: " + broker);
+		}
+			
+		// loop and stay up
+		loop();
 		
-		System.out.println("AVM MQTT Gateway started, connected with: " + broker);
-		
+		server.shutdown();
+	}
+	
+	private static void printHeader()
+	{
+		System.out.println("***");
+		System.out.println("***");
+		System.out.println("*** IoTGateway...");
+		System.out.println("***");
+	}
+	
+	private static void loop()
+	{
 		// loop to keep the server running...
-		while(true)
+		while (true)
 		{
 			try
 			{
@@ -77,8 +100,6 @@ public class Main
 			} catch (InterruptedException e)
 			{
 				e.printStackTrace();
-				
-				server.shutdown();
 			}
 		}
 	}
