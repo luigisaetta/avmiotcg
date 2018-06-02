@@ -7,6 +7,8 @@ import java.util.Properties;
 
 public class MyConfig
 {
+	private static final String CONFIG_PROPERTIES = "./config/config.properties";
+
 	// static variable instance (Singleton)
 	private static MyConfig instance = null;
 	
@@ -58,7 +60,7 @@ public class MyConfig
 		try
 		{
 			// subdirectory of the current workdir
-			input = new FileInputStream("./config/config.properties");
+			input = new FileInputStream(CONFIG_PROPERTIES);
 
 			// load the properties file
 			prop.load(input);

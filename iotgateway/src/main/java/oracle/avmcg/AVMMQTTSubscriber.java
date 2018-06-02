@@ -30,6 +30,8 @@ public class AVMMQTTSubscriber implements MqttCallback
 	private static MemoryPersistence persistence = new MemoryPersistence();
 	private static MqttConnectOptions connOpts = new MqttConnectOptions();
 
+	MessageParser processor = MessageParserFactory.createProcessor(config.getMsgType());
+	
 	private static final int MIN_LENGTH = config.getMsgMinLength();
 
 	public AVMMQTTSubscriber()
@@ -55,7 +57,6 @@ public class AVMMQTTSubscriber implements MqttCallback
 
 		} catch (MqttException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 
 			System.exit(-1);
@@ -91,10 +92,8 @@ public class AVMMQTTSubscriber implements MqttCallback
 		// to solve the problem with + in string
 		String sOut = encodeUTF8(sMessage);
 		
-		if ((sOut != null) && (isPayloadOK(sOut)))
+		if (isPayloadOK(sOut))
 		{
-			MessageParser processor = MessageParserFactory.createProcessor(config.getMsgType());
-			
 			OBD2Message msg = processor.process(sOut);
 
 			// add send to Oracle IoT
@@ -141,5 +140,4 @@ public class AVMMQTTSubscriber implements MqttCallback
 		else
 			return false;
 	}
-
 }

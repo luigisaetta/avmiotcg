@@ -3,6 +3,10 @@ package oracle.avmcg;
 public class OBD2Message
 {
 	String idChiamante, lat, lng, data, ora, tipoMsg, prot, vett, dataGps, oraGps, dir, vel, km, seqInfo;
+	
+	String rpm, coolantTemp, maf, runtime;
+	
+	
 
 	public String getIdChiamante()
 	{
@@ -143,5 +147,57 @@ public class OBD2Message
 	{
 		this.seqInfo = seqInfo;
 	}
+	
+	public float getRpm()
+	{
+		if (rpm == null)
+			rpm = "0";
+		
+		return Float.parseFloat(rpm);
+	}
 
+	public void setRpm(String rpm)
+	{
+		this.rpm = rpm;
+	}
+	
+	public int getCoolantTemp()
+	{
+		if (coolantTemp == null)
+			coolantTemp = "0";
+		
+		return Integer.parseInt(coolantTemp);
+	}
+
+	public void setCoolantTemp(String coolantTemp)
+	{
+		this.coolantTemp = coolantTemp;
+	}
+
+	public double getMaf()
+	{
+		if (maf == null)
+			maf = "0";
+		
+		return (Math.round(Double.parseDouble(maf)*100.0)/100.0);
+	}
+
+	public void setMaf(String maf)
+	{
+		this.maf = maf;
+	}
+
+	public int getRuntime()
+	{
+		return Integer.parseInt(runtime);
+	}
+
+	public void setRuntime(String runtime)
+	{
+		if (runtime == null)
+			runtime = "0";
+		
+		this.runtime = runtime;
+	}
+	
 }

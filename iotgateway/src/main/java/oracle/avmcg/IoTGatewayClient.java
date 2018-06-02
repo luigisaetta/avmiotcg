@@ -5,7 +5,6 @@ import oracle.iot.client.device.GatewayDevice;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 import oracle.iot.client.DeviceModel;
 import oracle.iot.client.device.VirtualDevice;
@@ -20,8 +19,8 @@ public class IoTGatewayClient
 	private DeviceModel deviceModel = null;
 
 
-	// the hashtable containing the list of devices already registered
-	Hashtable<String, VirtualDevice> hDevices = new Hashtable<String, VirtualDevice>();
+	// the cache containing the list of devices already registered
+	DeviceCache hDevices = new DeviceCache();
 
 	public IoTGatewayClient(String configFilePath, String pwd)
 	{
@@ -58,6 +57,10 @@ public class IoTGatewayClient
 		String deviceId = null;
 		VirtualDevice virtualDevice = null;
 		
+		// added check to avoid NPE
+		if (msg == null)
+			return;
+		
 		printData(msg);
 		
 		// Lazy Registration of Device
@@ -91,15 +94,19 @@ public class IoTGatewayClient
 		try
 		{
 			//
-			// data set to zero are not available
+			// data set to zero are not available now
 			//
 			
 			// now virtualDevice should be in hashtable
 			virtualDevice = hDevices.get(msg.getIdChiamante());
 			
 			virtualDevice.update().set("ora_latitude", msg.getLat()).set("ora_longitude", msg.getLng())
-					.set("ora_altitude", 0).set("ora_obd2_vehicle_speed", msg.getVel())
-					.set("ora_obd2_engine_rpm", 0).set("ora_obd2_engine_coolant_temperature", 50)
+					.set("ora_altitude", 0)
+					.set("ora_obd2_vehicle_speed", msg.getVel())
+					.set("ora_obd2_engine_rpm", msg.getRpm())
+					.set("ora_obd2_engine_coolant_temperature", msg.getCoolantTemp())
+					.set("ora_obd2_mass_air_flow", msg.getMaf())
+					.set("ora_obd2_runtime_since_engine_start", msg.getRuntime())
 					.set("ora_obd2_number_of_dtcs", 0).finish();
 			
 			System.out.println("Msg sent to Iot...");

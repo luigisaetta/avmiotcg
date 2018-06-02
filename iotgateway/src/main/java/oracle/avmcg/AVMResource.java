@@ -31,9 +31,8 @@ public class AVMResource
 	MessageParser processor = MessageParserFactory.createProcessor(config.getMsgType());
 	
 	/**
-	 * Method handling HTTP GET requests. The returned object will be sent to the
-	 * client as "text/plain" media type.
-	 *
+	 * Method handling HTTP GET requests. 
+	 * ONLY for tests
 	 * @return String that will be returned as a text/plain response.
 	 */
 	@GET
@@ -44,8 +43,7 @@ public class AVMResource
 	}
 
 	/**
-	 * Method handling HTTP POST requests. The returned object will be sent to the
-	 * client as "text/plain" media type.
+	 * Method handling HTTP POST requests. 
 	 *
 	 * @return String that will be returned as a text/plain response.
 	 */
@@ -59,7 +57,7 @@ public class AVMResource
 		System.out.println("..........");
 		System.out.println("POST input request s: " + sOut);
 
-		if ((sOut != null) && (isPayloadOK(sOut)))
+		if (isPayloadOK(sOut))
 		{
 			OBD2Message msg = processor.process(sOut);
 
