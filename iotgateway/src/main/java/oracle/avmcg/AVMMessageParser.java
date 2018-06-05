@@ -12,7 +12,7 @@ public class AVMMessageParser implements MessageParser
 		OBD2Message outMess = new OBD2Message();
 		
 		StringTokenizer stk = new StringTokenizer(val, "^");
-		outMess.setIdChiamante(stk.nextToken());
+		outMess.setDeviceId(stk.nextToken());
 		val = stk.nextToken();
 		
 		stk = new StringTokenizer(val, "+");
@@ -35,5 +35,4 @@ public class AVMMessageParser implements MessageParser
 		
 		return outMess;
 	}
-	
 }

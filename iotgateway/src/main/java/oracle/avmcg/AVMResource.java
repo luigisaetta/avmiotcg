@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
  * this class provide methods to handle HTTP requests compliant to Cotral AVM
  * protocol
  */
-@Path("r")
+@Path("avm")
 public class AVMResource
 {
 	// le due variabili sono impostate come variabili di ambiente
@@ -59,7 +59,7 @@ public class AVMResource
 
 		if (isPayloadOK(sOut))
 		{
-			OBD2Message msg = processor.process(sOut);
+			OBD2Message msg = (OBD2Message)processor.process(sOut);
 
 			// send to Oracle IoT CS the msg
 			gwClient.send(msg);

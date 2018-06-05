@@ -1,23 +1,11 @@
 package oracle.avmcg;
 
-public class OBD2Message
+public class OBD2Message extends Message
 {
-	String idChiamante, lat, lng, data, ora, tipoMsg, prot, vett, dataGps, oraGps, dir, vel, km, seqInfo;
+	String lat, lng, data, ora, tipoMsg, prot, vett, dataGps, oraGps, dir, vel, km, seqInfo;
 	
 	String rpm, coolantTemp, maf, runtime;
 	
-	
-
-	public String getIdChiamante()
-	{
-		return idChiamante;
-	}
-
-	public void setIdChiamante(String idChiamante)
-	{
-		this.idChiamante = idChiamante;
-	}
-
 	public Double getLat()
 	{
 		return Double.parseDouble(lat);
@@ -189,6 +177,9 @@ public class OBD2Message
 
 	public int getRuntime()
 	{
+		if (runtime == null)
+			runtime = "0";
+		
 		return Integer.parseInt(runtime);
 	}
 

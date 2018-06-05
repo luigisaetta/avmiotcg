@@ -35,7 +35,7 @@ public class JSONMessageParser implements MessageParser
 		    System.out.println("Lon: " + lon);
 		    System.out.println("RPM: " + rpm);
 		    
-		    outMess.setIdChiamante(carId);
+		    outMess.setDeviceId(carId);
 		    outMess.setLat(lat);
 		    outMess.setLng(lon);
 		    outMess.setVel(speed);

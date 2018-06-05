@@ -31,7 +31,7 @@ public class TraccarClient
 		long tst = System.currentTimeMillis() / 1000;
 
 		TraccarMessage trcMess = new TraccarMessage(msg.getLng(), msg.getLat(), msg.getVel(), tst, 
-				msg.getIdChiamante(), "R09", "location");
+				msg.getDeviceId(), "R09", "location");
 
 		try
 		{

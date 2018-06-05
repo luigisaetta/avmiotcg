@@ -17,6 +17,9 @@ public class MessageParserFactory
 			case "JSON":
 				processor = new JSONMessageParser();
 				break;
+			case "SIGFOX":
+				processor = new SigfoxMessageParser();
+				break;
 		}
 		return processor;
 	}

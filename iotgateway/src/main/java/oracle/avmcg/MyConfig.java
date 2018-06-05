@@ -28,6 +28,7 @@ public class MyConfig
 	private int mqttBrokerPort = 1883;
 	private String inputTopic = "devices/avm/msg";
 	
+	// STRING|AVM|JSON
 	private String msgType = "STRING";
 	private int msgMinLength = 76;
 	

@@ -94,7 +94,7 @@ public class AVMMQTTSubscriber implements MqttCallback
 		
 		if (isPayloadOK(sOut))
 		{
-			OBD2Message msg = processor.process(sOut);
+			OBD2Message msg = (OBD2Message) processor.process(sOut);
 
 			// add send to Oracle IoT
 			// send to Oracle IoT CS the msg
