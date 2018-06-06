@@ -79,15 +79,6 @@ public class IoTGatewayClient
 
 				virtualDevice = gw.createVirtualDevice(deviceId, deviceModel1);
 
-				// register a callable action on the device
-				virtualDevice.setCallable("reply", new oracle.iot.client.device.VirtualDevice.Callable<Void>() {
-					public void call(oracle.iot.client.device.VirtualDevice virtualDevice, Void not_used)
-					{
-						// reply action code
-						System.out.println("reply action called...");
-					}
-				});
-
 				// save in Hashtable
 				hDevices.put(msg.getDeviceId(), virtualDevice);
 			} catch (IOException e)

@@ -23,6 +23,7 @@ public class SigfoxMessageParser implements MessageParser
 			String device = jsonObject.get("device").getAsString();
 			String data = jsonObject.get("data").getAsString();
 			
+			//data is temp,hum,lum with ',' as separator
 			StringTokenizer stk = new StringTokenizer(hexToAscii(data), ",");
 			
 			th.setDeviceId(device);
